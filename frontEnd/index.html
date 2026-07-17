@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum da Família Barreto</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sound Control -->
+    <button id="sound-toggle" class="sound-btn" aria-label="Alternar som">
+        <svg class="sound-icon-on" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor"
+                d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.77 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+        </svg>
+        <svg class="sound-icon-off hidden" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor"
+                d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.5C15.58,18 14.83,18.4 14,18.71V20.77C15.38,20.44 16.63,19.78 17.7,18.9L20.73,21.93L22,20.66L4.27,3M14,3.23V5.29C14.73,5.5 15.43,5.83 16.07,6.26L14.59,7.74C14.41,7.65 14.21,7.58 14,7.54V9.54L19,14.54C19,13.7 19,12.85 19,12C19,7.72 16,4.14 14,3.23M16.5,12C16.5,11.2 16.1,10.5 15.5,10.05L14,11.55V12.45L15.46,13.9C15.48,13.28 16.5,12.62 16.5,12Z" />
+        </svg>
+    </button>
+
+    <!-- Navigation Arrows -->
+    <button id="btn-prev" class="nav-btn nav-btn-left" aria-label="Página Anterior">
+        <svg viewBox="0 0 24 24" width="36" height="36">
+            <path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+        </svg>
+    </button>
+    <button id="btn-next" class="nav-btn nav-btn-right" aria-label="Próxima Página">
+        <svg viewBox="0 0 24 24" width="36" height="36">
+            <path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+        </svg>
+    </button>
+
+    <!-- Album Container -->
+    <div class="album-viewport" id="album-viewport">
+        <div class="flip-book" id="book">
+
+            <!-- PAGINA 0: CAPA -->
+            <div class="page page-cover" data-density="hard">
+                <div class="page-content cover-content">
+                    <div class="cover-header">
+                        <span class="cover-seal">COLEÇÃO OFICIAL</span>
+                    </div>
+                    <div class="cover-body">
+                        <h1 class="cover-title glitch" data-text="FAMÍLIA">FAMÍLIA</h1>
+                        <h2 class="cover-subtitle glitch" data-text="BARRETO">BARRETO</h2>
+                        <div class="cover-art">
+                            <div class="art-grid"></div>
+
+                            <!-- Floating Mini Cards Silhouette Collage -->
+                            <div class="mini-card mc-turing">
+                                <div class="mc-avatar">PA</div>
+                                <span class="mc-num">#01</span>
+                            </div>
+                            <div class="mini-card mc-guido">
+                                <div class="mc-avatar">ER</div>
+                                <span class="mc-num">#03</span>
+                            </div>
+                            <div class="mini-card mc-jobs">
+                                <div class="mc-avatar">DA</div>
+                                <span class="mc-num">#12</span>
+                            </div>
+
+                            <!-- Central Glowing 3D Tech Sphere -->
+                            <div class="tech-sphere">
+                                <div class="sphere-core">
+                                    <svg class="art-logo" viewBox="0 0 24 24">
+                                        <path d="M12 2L2 22h20L12 2zm0 4l6.5 13h-13L12 6z" />
+                                    </svg>
+                                </div>
+                                <div class="sphere-ring ring-1"></div>
+                                <div class="sphere-ring ring-2"></div>
+                            </div>
+                        </div>
+                        <p class="cover-footer-text">A HISTÓRIA E UNIÃO DA NOSSA FAMÍLIA</p>
+                    </div>
+                    <div class="cover-footer">
+                        <span>ÁLBUM DE RECORDAÇÕES</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGINA 1: OS PAIS -->
+            <div class="page page-left">
+                <div class="page-content">
+                    <div class="page-header">
+                        <span class="tech-badge badge-pais">PAIS</span>
+                        <h3 class="page-title">Fundadores da Família</h3>
+                    </div>
+                    <div class="stickers-grid">
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#01</div>
+                            <div class="slot-name">Pai</div>
+                            <div class="slot-role">O patriarca da Família Barreto</div>
+                        </div>
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#02</div>
+                            <div class="slot-name">Mãe</div>
+                            <div class="slot-role">A matriarca da Família Barreto</div>
+                        </div>
+                    </div>
+                    <div class="page-footer">Pág. 1</div>
+                </div>
+            </div>
+
+            <!-- PAGINA 2: FILHOS - PARTE 1 -->
+            <div class="page page-right">
+                <div class="page-content">
+                    <div class="page-header">
+                        <span class="tech-badge badge-filhos">FILHOS</span>
+                        <h3 class="page-title">Nossos Filhos - Vol. 1</h3>
+                    </div>
+                    <div class="stickers-grid">
+                        <div class="sticker-slot">
+                            <div class="slot-number">#03</div>
+                            <div class="slot-name">1ª Filha</div>
+                            <div class="slot-role">Erdinilza</div>
+                        </div>
+                        <div class="sticker-slot">
+                            <div class="slot-number">#04</div>
+                            <div class="slot-name">2º Filho</div>
+                            <div class="slot-role">Arnaldo</div>
+                        </div>
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#05</div>
+                            <div class="slot-name">3º Filho</div>
+                            <div class="slot-role">Gernilson</div>
+                        </div>
+                    </div>
+                    <div class="page-footer">Pág. 2</div>
+                </div>
+            </div>
+
+            <!-- PAGINA 3: FILHOS - PARTE 2 -->
+            <div class="page page-left">
+                <div class="page-content">
+                    <div class="page-header">
+                        <span class="tech-badge badge-filhos">FILHOS</span>
+                        <h3 class="page-title">Nossos Filhos - Vol. 2</h3>
+                    </div>
+                    <div class="stickers-grid">
+                        <div class="sticker-slot">
+                            <div class="slot-number">#06</div>
+                            <div class="slot-name">4ª Filha</div>
+                            <div class="slot-role">Sirlene</div>
+                        </div>
+                        <div class="sticker-slot">
+                            <div class="slot-number">#07</div>
+                            <div class="slot-name">5º Filho</div>
+                            <div class="slot-role">Gildeon</div>
+                        </div>
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#08</div>
+                            <div class="slot-name">6º Filho</div>
+                            <div class="slot-role">Gildei</div>
+                        </div>
+                    </div>
+                    <div class="page-footer">Pág. 3</div>
+                </div>
+            </div>
+
+            <!-- PAGINA 4: GENROS & NORAS -->
+            <div class="page page-right">
+                <div class="page-content">
+                    <div class="page-header">
+                        <span class="tech-badge badge-uniao">UNIÃO</span>
+                        <h3 class="page-title">Parceiros de Vida (Genros & Noras)</h3>
+                    </div>
+                    <div class="stickers-grid">
+                        <div class="sticker-slot">
+                            <div class="slot-number">#09</div>
+                            <div class="slot-name">Esposa da Erdinilza</div>
+                            <div class="slot-role">Carlos</div>
+                        </div>
+                        <div class="sticker-slot">
+                            <div class="slot-number">#10</div>
+                            <div class="slot-name">Esposa do Arnaldo</div>
+                            <div class="slot-role">Danilia</div>
+                        </div>
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#11</div>
+                            <div class="slot-name">Esposa do Gildei</div>
+                            <div class="slot-role">Poliana</div>
+                        </div>
+                    </div>
+                    <div class="page-footer">Pág. 4</div>
+                </div>
+            </div>
+
+            <!-- PAGINA 5: NETOS -->
+            <div class="page page-left">
+                <div class="page-content">
+                    <div class="page-header">
+                        <span class="tech-badge badge-netos">NETOS</span>
+                        <h3 class="page-title">A Nova Geração (Netos)</h3>
+                    </div>
+                    <div class="stickers-grid">
+                        <div class="sticker-slot">
+                            <div class="slot-number">#12</div>
+                            <div class="slot-name">Daniella</div>
+                            <div class="slot-role">Neta</div>
+                        </div>
+                        <div class="sticker-slot">
+                            <div class="slot-number">#13</div>
+                            <div class="slot-name">Lucas</div>
+                            <div class="slot-role">Neto</div>
+                        </div>
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#14</div>
+                            <div class="slot-name">Livia</div>
+                            <div class="slot-role">Neta</div>
+                        </div>
+                    </div>
+                    <div class="page-footer">Pág. 5</div>
+                </div>
+            </div>
+
+            <!-- PAGINA 6: MEMÓRIAS DA FAMÍLIA -->
+            <div class="page page-right">
+                <div class="page-content">
+                    <div class="page-header">
+                        <span class="tech-badge badge-memorias">MEMÓRIAS</span>
+                        <h3 class="page-title">Momentos Especiais</h3>
+                    </div>
+                    <div class="stickers-grid">
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#15</div>
+                            <div class="slot-name">Foto de Família</div>
+                            <div class="slot-role">Toda a Família Barreto Reunida</div>
+                        </div>
+                        <div class="sticker-slot special-slot">
+                            <div class="slot-number">#16</div>
+                            <div class="slot-name">Momentos Marcantes</div>
+                            <div class="slot-role">Nossas melhores recordações</div>
+                        </div>
+                    </div>
+                    <div class="page-footer">Pág. 6</div>
+                </div>
+            </div>
+
+            <!-- PAGINA 7: CONTRACAPA -->
+            <div class="page page-cover-back" data-density="hard">
+                <div class="page-content cover-back-content">
+                    <div class="cover-back-header">
+                        <h2>FAMÍLIA BARRETO</h2>
+                    </div>
+                    <div class="cover-back-body">
+                        <div class="tech-logo-collage">
+                            <span>PAIS</span> • <span>FILHOS</span> • <span>GENROS & NORAS</span> • <span>NETOS</span>
+                        </div>
+                        <p class="summary-text">
+                            O Álbum da Família Barreto é um tributo interativo à nossa história, amor e união.
+                            Juntando as gerações e as mentes que iluminam nossa trajetória e moldam nosso futuro.
+                        </p>
+                        <div class="barcode-container">
+                            <div class="barcode">
+                                <!-- Simulated barcode lines -->
+                                <div class="bar"></div>
+                                <div class="bar thin"></div>
+                                <div class="bar"></div>
+                                <div class="bar thick"></div>
+                                <div class="bar thin"></div>
+                                <div class="bar"></div>
+                                <div class="bar thick"></div>
+                                <div class="bar"></div>
+                                <div class="bar thin"></div>
+                                <div class="bar thick"></div>
+                            </div>
+                            <span class="barcode-number">2026 BARRETO ALBUM</span>
+                        </div>
+                    </div>
+                    <div class="cover-back-footer">
+                        <span>Família Barreto • Álbum de Recordações • 2026</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Page Flip Library -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+    <!-- Logic -->
+    <script src="app.js"></script>
+</body>
+
+</html>
