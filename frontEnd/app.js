@@ -3,7 +3,7 @@
 // Quando o frontend for servido pelo FastAPI (Dia 3), a API está
 // no mesmo servidor — usamos uma URL relativa ou o endereço completo.
 // ===================================================
-const API_BASE_URL = "https://album-alura-backend.onrender.com";
+const API_BASE_URL = "https://album-alura.onrender.com";
 
 // ===================================================
 // FUNÇÃO: Preenche os slots do álbum com imagens da API
