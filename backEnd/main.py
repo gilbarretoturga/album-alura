@@ -109,7 +109,7 @@ figurinhas = [
      },
      {
          "id": 15,
-         "nome": "Momentods",
+         "nome": "Momento",
          "categoria": "momento",
          "imagem_url": "/figurinhas/15/imagem"
      },    
