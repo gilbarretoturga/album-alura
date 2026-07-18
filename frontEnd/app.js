@@ -69,17 +69,30 @@ async function preencherFigurinhas() {
         // A figurinha existe: insere a imagem
         const figurinha = porId.get(id);
 
-        const img = document.createElement("img");
-
         // Se a API falhou, usa o caminho local direto
-        img.src = useAPI ? `${API_BASE_URL}${figurinha.imagem_url}` : figurinha.imagem_url;
+        const srcFinal = useAPI ? `${API_BASE_URL}${figurinha.imagem_url}` : figurinha.imagem_url;
+
+        // Wrapper: contém a camada de fundo desfocada + a foto inteira por cima
+        const wrap = document.createElement("div");
+        wrap.className = "sticker-img-wrap";
+
+        const bg = document.createElement("div");
+        bg.className = "sticker-img-bg";
+        bg.style.backgroundImage = `url("${srcFinal}")`;
+
+        const img = document.createElement("img");
+        img.src = srcFinal;
         img.alt = figurinha.nome;
         img.className = "sticker-img";
+        img.loading = "lazy";
+        img.decoding = "async";
 
         img.onload = () => slot.classList.add("slot-preenchido");
         img.onerror = () => console.warn(`Imagem não encontrada para: ${figurinha.nome} (caminho: ${img.src})`);
 
-        slot.insertBefore(img, slot.firstChild);
+        wrap.appendChild(bg);
+        wrap.appendChild(img);
+        slot.insertBefore(wrap, slot.firstChild);
     }
 }
 

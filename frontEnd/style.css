@@ -108,7 +108,8 @@ body {
   border-radius: 8px;
   overflow: hidden;
   background-color: transparent;
-  display: none; /* Shown after initialization */
+  display: none;
+  /* Shown after initialization */
 }
 
 /* Individual Pages */
@@ -117,19 +118,22 @@ body {
   height: 800px;
   background-color: var(--color-white-snow);
   overflow: hidden;
-  cursor: grab; /* Mão aberta indicando que a página pode ser "agarrada" */
-  user-select: none; /* Impede seleção de texto ao arrastar a página */
+  cursor: grab;
+  /* Mão aberta indicando que a página pode ser "agarrada" */
+  user-select: none;
+  /* Impede seleção de texto ao arrastar a página */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
 
 .page:active {
-  cursor: grabbing; /* Mão fechada durante o clique na página */
+  cursor: grabbing;
+  /* Mão fechada durante o clique na página */
 }
 
 /* Global dragging cursor override */
-body.dragging, 
+body.dragging,
 body.dragging * {
   cursor: grabbing !important;
   user-select: none !important;
@@ -153,7 +157,7 @@ body.dragging * {
   right: 0;
   width: 30px;
   height: 100%;
-  background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0, 0, 0, 0.08) 70%, rgba(0, 0, 0, 0.16) 100%);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.08) 70%, rgba(0, 0, 0, 0.16) 100%);
   pointer-events: none;
   z-index: 10;
 }
@@ -165,7 +169,7 @@ body.dragging * {
   left: 0;
   width: 30px;
   height: 100%;
-  background: linear-gradient(to left, rgba(0,0,0,0) 0%, rgba(0, 0, 0, 0.08) 70%, rgba(0, 0, 0, 0.16) 100%);
+  background: linear-gradient(to left, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.08) 70%, rgba(0, 0, 0, 0.16) 100%);
   pointer-events: none;
   z-index: 10;
 }
@@ -188,13 +192,28 @@ body.dragging * {
   font-weight: 700;
   color: var(--color-white-snow);
   letter-spacing: 1.5px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
-.badge-pais { background-color: #8b5a2b; }
-.badge-filhos { background-color: var(--color-dev-blue); }
-.badge-uniao { background-color: var(--color-deep-blue); }
-.badge-netos { background-color: var(--color-tech-blue); }
-.badge-memorias { background-color: var(--color-blue-universe); }
+
+.badge-pais {
+  background-color: #8b5a2b;
+}
+
+.badge-filhos {
+  background-color: var(--color-dev-blue);
+}
+
+.badge-uniao {
+  background-color: var(--color-deep-blue);
+}
+
+.badge-netos {
+  background-color: var(--color-tech-blue);
+}
+
+.badge-memorias {
+  background-color: var(--color-blue-universe);
+}
 
 .page-title {
   font-family: 'Outfit', sans-serif;
@@ -282,20 +301,38 @@ body.dragging * {
    Estilos para as imagens inseridas via JavaScript
    =================================================== */
 
-.sticker-img {
+/* Wrapper que ocupa o slot inteiro e nunca corta a foto */
+.sticker-img-wrap {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  overflow: hidden;
   border-radius: 4px;
   opacity: 0;
   animation: sticker-aparecer 0.5s ease-out forwards;
 }
 
+/* Camada de fundo: a própria foto, desfocada e ampliada, preenchendo os cantos vazios */
+.sticker-img-bg {
+  position: absolute;
+  inset: -12px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(18px) brightness(0.7) saturate(1.15);
+  transform: scale(1.15);
+}
+
+/* Foto real: SEMPRE inteira, sem cortar rosto/cabeça, seja vertical ou horizontal */
+.sticker-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  z-index: 1;
+}
+
 /* Slot com imagem: remove padding e corta o overflow */
-.sticker-slot:has(.sticker-img) {
+.sticker-slot:has(.sticker-img-wrap) {
   padding: 0;
   overflow: hidden;
 }
@@ -331,6 +368,7 @@ body.dragging * {
     opacity: 0;
     transform: scale(0.92) translateY(-4px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -404,8 +442,13 @@ body.dragging * {
 }
 
 @keyframes sealShine {
-  0% { left: -150%; }
-  100% { left: 150%; }
+  0% {
+    left: -150%;
+  }
+
+  100% {
+    left: 150%;
+  }
 }
 
 .cover-body {
@@ -447,30 +490,91 @@ body.dragging * {
 }
 
 @keyframes glitch-anim {
-  0% { clip: rect(31px, 9999px, 94px, 0); }
-  10% { clip: rect(112px, 9999px, 76px, 0); }
-  20% { clip: rect(85px, 9999px, 5px, 0); }
-  30% { clip: rect(27px, 9999px, 115px, 0); }
-  40% { clip: rect(73px, 9999px, 29px, 0); }
-  50% { clip: rect(118px, 9999px, 141px, 0); }
-  60% { clip: rect(9px, 9999px, 52px, 0); }
-  70% { clip: rect(104px, 9999px, 120px, 0); }
-  80% { clip: rect(62px, 9999px, 83px, 0); }
-  90% { clip: rect(43px, 9999px, 110px, 0); }
-  100% { clip: rect(135px, 9999px, 18px, 0); }
+  0% {
+    clip: rect(31px, 9999px, 94px, 0);
+  }
+
+  10% {
+    clip: rect(112px, 9999px, 76px, 0);
+  }
+
+  20% {
+    clip: rect(85px, 9999px, 5px, 0);
+  }
+
+  30% {
+    clip: rect(27px, 9999px, 115px, 0);
+  }
+
+  40% {
+    clip: rect(73px, 9999px, 29px, 0);
+  }
+
+  50% {
+    clip: rect(118px, 9999px, 141px, 0);
+  }
+
+  60% {
+    clip: rect(9px, 9999px, 52px, 0);
+  }
+
+  70% {
+    clip: rect(104px, 9999px, 120px, 0);
+  }
+
+  80% {
+    clip: rect(62px, 9999px, 83px, 0);
+  }
+
+  90% {
+    clip: rect(43px, 9999px, 110px, 0);
+  }
+
+  100% {
+    clip: rect(135px, 9999px, 18px, 0);
+  }
 }
 
 @keyframes glitch-anim2 {
-  0% { clip: rect(76px, 9999px, 116px, 0); }
-  11% { clip: rect(3px, 9999px, 42px, 0); }
-  22% { clip: rect(122px, 9999px, 88px, 0); }
-  33% { clip: rect(94px, 9999px, 149px, 0); }
-  44% { clip: rect(18px, 9999px, 64px, 0); }
-  55% { clip: rect(108px, 9999px, 5px, 0); }
-  66% { clip: rect(31px, 9999px, 92px, 0); }
-  77% { clip: rect(83px, 9999px, 137px, 0); }
-  88% { clip: rect(144px, 9999px, 22px, 0); }
-  100% { clip: rect(52px, 9999px, 110px, 0); }
+  0% {
+    clip: rect(76px, 9999px, 116px, 0);
+  }
+
+  11% {
+    clip: rect(3px, 9999px, 42px, 0);
+  }
+
+  22% {
+    clip: rect(122px, 9999px, 88px, 0);
+  }
+
+  33% {
+    clip: rect(94px, 9999px, 149px, 0);
+  }
+
+  44% {
+    clip: rect(18px, 9999px, 64px, 0);
+  }
+
+  55% {
+    clip: rect(108px, 9999px, 5px, 0);
+  }
+
+  66% {
+    clip: rect(31px, 9999px, 92px, 0);
+  }
+
+  77% {
+    clip: rect(83px, 9999px, 137px, 0);
+  }
+
+  88% {
+    clip: rect(144px, 9999px, 22px, 0);
+  }
+
+  100% {
+    clip: rect(52px, 9999px, 110px, 0);
+  }
 }
 
 .cover-title {
@@ -500,7 +604,7 @@ body.dragging * {
   border: 1px solid rgba(0, 240, 255, 0.2);
   border-radius: 12px;
   background: rgba(7, 8, 14, 0.7);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.6), inset 0 0 25px rgba(0, 240, 255, 0.05);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(0, 240, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -512,7 +616,7 @@ body.dragging * {
   width: 100%;
   height: 100%;
   background-size: 20px 20px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
 }
@@ -585,18 +689,39 @@ body.dragging * {
 }
 
 @keyframes floatCard1 {
-  0%, 100% { transform: rotate(-12deg) translateY(0); }
-  50% { transform: rotate(-10deg) translateY(-6px); }
+
+  0%,
+  100% {
+    transform: rotate(-12deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-10deg) translateY(-6px);
+  }
 }
 
 @keyframes floatCard2 {
-  0%, 100% { transform: rotate(8deg) translateY(0); }
-  50% { transform: rotate(6deg) translateY(-4px); }
+
+  0%,
+  100% {
+    transform: rotate(8deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(6deg) translateY(-4px);
+  }
 }
 
 @keyframes floatCard3 {
-  0%, 100% { transform: rotate(15deg) translateY(0); }
-  50% { transform: rotate(18deg) translateY(-5px); }
+
+  0%,
+  100% {
+    transform: rotate(15deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(18deg) translateY(-5px);
+  }
 }
 
 /* Central Glowing 3D Tech Sphere */
@@ -653,10 +778,13 @@ body.dragging * {
 }
 
 @keyframes spherePulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
   }
+
   50% {
     transform: scale(1.06);
     box-shadow: 0 0 35px rgba(0, 240, 255, 0.9);
@@ -664,13 +792,23 @@ body.dragging * {
 }
 
 @keyframes spinRing1 {
-  0% { transform: rotateX(70deg) rotateY(15deg) rotateZ(0deg); }
-  100% { transform: rotateX(70deg) rotateY(15deg) rotateZ(360deg); }
+  0% {
+    transform: rotateX(70deg) rotateY(15deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(70deg) rotateY(15deg) rotateZ(360deg);
+  }
 }
 
 @keyframes spinRing2 {
-  0% { transform: rotateX(15deg) rotateY(70deg) rotateZ(360deg); }
-  100% { transform: rotateX(15deg) rotateY(70deg) rotateZ(0deg); }
+  0% {
+    transform: rotateX(15deg) rotateY(70deg) rotateZ(360deg);
+  }
+
+  100% {
+    transform: rotateX(15deg) rotateY(70deg) rotateZ(0deg);
+  }
 }
 
 .cover-footer-text {
@@ -801,7 +939,7 @@ body.dragging * {
   background: #FFFFFF;
   padding: 12px 20px;
   border-radius: 4px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .barcode {
@@ -843,58 +981,73 @@ body.dragging * {
     width: 900px;
     height: 650px;
   }
+
   .page {
     width: 450px;
     height: 650px;
   }
+
   .page-content {
     padding: 30px;
   }
+
   .sticker-slot {
     min-height: 120px;
   }
+
   .special-slot {
     min-height: 130px;
   }
+
   .slot-number {
     width: 38px;
     height: 38px;
     font-size: 1.4rem;
   }
+
   .cover-title {
     font-size: 3rem;
   }
+
   .cover-subtitle {
     font-size: 1.4rem;
   }
+
   .cover-art {
     width: 170px;
     height: 220px;
   }
+
   .tech-sphere {
     transform: scale(0.75);
   }
+
   .mini-card {
     width: 38px;
     height: 52px;
     padding: 4px 2px;
   }
+
   .mc-avatar {
     width: 18px;
     height: 18px;
     font-size: 0.5rem;
   }
+
   .mc-num {
     font-size: 0.5rem;
   }
+
   .mc-turing {
     top: 15px;
     left: 15px;
   }
+
   .mc-guido {
     bottom: 15px;
     left: 10px;
   }
+
   .mc-jobs {
     top: 55px;
     right: 10px;
@@ -902,6 +1055,7 @@ body.dragging * {
 }
 
 @media (max-width: 768px) {
+
   /* In portrait/mobile mode, StPageFlip will show single pages */
   .album-viewport {
     width: 100%;
@@ -910,69 +1064,88 @@ body.dragging * {
     min-height: 580px;
     padding: 10px;
   }
+
   .page {
     width: 100%;
     height: 580px;
   }
+
   .page-content {
     padding: 25px 20px;
   }
+
   .page-header {
     margin-bottom: 15px;
   }
+
   .page-title {
     font-size: 1.3rem;
   }
+
   .stickers-grid {
     gap: 10px;
   }
+
   .sticker-slot {
     min-height: 100px;
     padding: 6px;
   }
+
   .special-slot {
     min-height: 110px;
     width: 90%;
   }
+
   .slot-number {
     width: 32px;
     height: 32px;
     font-size: 1.1rem;
     margin-bottom: 5px;
   }
+
   .slot-name {
     font-size: 0.8rem;
   }
+
   .slot-role {
     font-size: 0.65rem;
   }
+
   .cover-content {
     padding: 30px 15px;
   }
+
   .cover-title {
     font-size: 2.5rem;
   }
+
   .cover-art {
     width: 130px;
     height: 180px;
   }
+
   .tech-sphere {
     transform: scale(0.65);
   }
+
   .mini-card {
     display: none !important;
   }
+
   .nav-btn {
     width: 44px;
     height: 44px;
     opacity: 0.4;
   }
+
   .nav-btn-left {
     left: 10px;
   }
+
   .nav-btn-right {
     right: 10px;
   }
+
   .sound-btn {
     top: 10px;
     right: 10px;
