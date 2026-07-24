@@ -21,7 +21,7 @@ PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
 PASTA_IMAGENS = os.path.join(PASTA_BASE, "figurinhas")
 
 # 3. Lista de 30 figurinhas, deixando ativas apenas as que existem na pasta de imagens
-figurinhas = [
+figurinhas_estaticas = [
     {
         "id": 1,
         "nome": "Joaquim",
@@ -183,20 +183,63 @@ figurinhas = [
     # }
 ]
 
-# 4. Endpoint GET "/figurinhas" que retorna a lista das figurinhas ativas
+# Extensões de imagem suportadas
+EXTENSOES_IMAGEM = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".tiff"}
+
+def obter_novos_arquivos():
+    caminhos_estaticos = set()
+    for f in figurinhas_estaticas:
+        padrao = os.path.join(PASTA_IMAGENS, f"{f['id']:02d}[!0-9]*")
+        caminhos_estaticos.update(glob.glob(padrao))
+    
+    todos = glob.glob(os.path.join(PASTA_IMAGENS, "*"))
+    todos_arquivos = []
+    for f in todos:
+        if os.path.isfile(f):
+            _, ext = os.path.splitext(f)
+            if ext.lower() in EXTENSOES_IMAGEM:
+                todos_arquivos.append(f)
+                
+    novos = [f for f in todos_arquivos if os.path.abspath(f) not in {os.path.abspath(p) for p in caminhos_estaticos}]
+    # Ordena os novos alfabeticamente para consistência
+    novos.sort(key=lambda x: os.path.basename(x).lower())
+    return novos
+
+# 4. Endpoint GET "/figurinhas" que retorna a lista das figurinhas (estáticas + dinâmicas)
 @app.get("/figurinhas")
 def listar_figurinhas():
-    return figurinhas
+    lista = list(figurinhas_estaticas)
+    novos = obter_novos_arquivos()
+    
+    max_id = max([f["id"] for f in figurinhas_estaticas]) if figurinhas_estaticas else 0
+    for idx, caminho in enumerate(novos):
+        novo_id = max_id + 1 + idx
+        lista.append({
+            "id": novo_id,
+            "nome": "", # sem nome
+            "categoria": "Extra",
+            "imagem_url": f"/figurinhas/{novo_id}/imagem"
+        })
+    return lista
 
 # 5. Endpoint GET "/figurinhas/{id}/imagem"
 @app.get("/figurinhas/{id}/imagem")
 def obter_imagem(id: int):
-    # Cria o padrão glob para buscar arquivos na pasta com prefixo formatado "{id:02d}[!0-9]*"
-    padrao = os.path.join(PASTA_IMAGENS, f"{id:02d}[!0-9]*")
-    arquivos = glob.glob(padrao)
-    
-    if not arquivos:
-        raise HTTPException(status_code=404, detail="Imagem não encontrada")
-    
-    # Retorna o primeiro arquivo correspondente encontrado
-    return FileResponse(arquivos[0])
+    # Verifica se o ID corresponde a uma das figurinhas estáticas
+    id_estatico = any(f["id"] == id for f in figurinhas_estaticas)
+    if id_estatico:
+        # Padrão glob original para buscar arquivos na pasta com prefixo formatado "{id:02d}[!0-9]*"
+        padrao = os.path.join(PASTA_IMAGENS, f"{id:02d}[!0-9]*")
+        arquivos = glob.glob(padrao)
+        if not arquivos:
+            raise HTTPException(status_code=404, detail="Imagem não encontrada")
+        return FileResponse(arquivos[0])
+    else:
+        # Se for um ID dinâmico, recupera a imagem da lista ordenada de novos arquivos
+        novos = obter_novos_arquivos()
+        max_id = max([f["id"] for f in figurinhas_estaticas]) if figurinhas_estaticas else 0
+        idx = id - (max_id + 1)
+        if 0 <= idx < len(novos):
+            return FileResponse(novos[idx])
+        else:
+            raise HTTPException(status_code=404, detail="Imagem não encontrada")

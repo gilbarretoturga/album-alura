@@ -3,58 +3,18 @@
 // Quando o frontend for servido pelo FastAPI (Dia 3), a API está
 // no mesmo servidor — usamos uma URL relativa ou o endereço completo.
 // ===================================================
-const API_BASE_URL = "https://album-alura.onrender.com";
+const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:"
+    ? "http://127.0.0.1:8000"
+    : "https://album-alura.onrender.com";
 
 // ===================================================
 // FUNÇÃO: Preenche os slots do álbum com imagens da API
-// Esta função é chamada após o álbum ser inicializado.
 // ===================================================
-async function preencherFigurinhas() {
-    let figurinhas = [];
-    let useAPI = true;
-
-    try {
-        // 1. Busca as figurinhas disponíveis na API
-        const response = await fetch(`${API_BASE_URL}/figurinhas`);
-
-        if (!response.ok) {
-            throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
-        }
-
-        // 2. Converte o JSON em array JavaScript
-        figurinhas = await response.json();
-        console.log(`✅ ${figurinhas.length} figurinhas carregadas da API!`);
-
-    } catch (erro) {
-        console.warn("⚠️  Não foi possível conectar à API do backend:", erro.message);
-        console.info("ℹ️  Carregando figurinhas locais a partir da pasta 'imgs/' como fallback.");
-        useAPI = false;
-
-        // Figurinhas da Família Barreto como fallback local
-        figurinhas = [
-            { id: 1, nome: "Joaquim", imagem_url: "imgs/01-pai.jpg" },
-            { id: 2, nome: "Neli", imagem_url: "imgs/02-mae.jpg" },
-            { id: 3, nome: "Erdinilza", imagem_url: "imgs/03-erdinilza.jpg" },
-            { id: 4, nome: "Arnaldo", imagem_url: "imgs/04-arnaldo.jpg" },
-            { id: 5, nome: "Gernilson", imagem_url: "imgs/05-gernilson.jpg" },
-            { id: 6, nome: "Sirlene", imagem_url: "imgs/06-sirlene.jpg" },
-            { id: 7, nome: "Gildeon", imagem_url: "imgs/07-gildeon.jpg" },
-            { id: 8, nome: "Gildei", imagem_url: "imgs/08-gildei.jpg" },
-            { id: 9, nome: "Carlos", imagem_url: "imgs/09-carlos.jpeg" },
-            { id: 10, nome: "Danilia", imagem_url: "imgs/10-danilia.jpg" },
-            { id: 11, nome: "Poliana", imagem_url: "imgs/11-poliana.jpg" },
-            { id: 12, nome: "Daniella", imagem_url: "imgs/12-daniella.jpg" },
-            { id: 13, nome: "Lucas", imagem_url: "imgs/13-lucas.jpg" },
-            { id: 14, nome: "Livia", imagem_url: "imgs/14-livia.jpg" },
-            { id: 15, nome: "Foto de Família", imagem_url: "imgs/15-familia.jpg" },
-            { id: 16, nome: "Momentos Marcantes", imagem_url: "imgs/16-momentos.jpg" }
-        ];
-    }
-
+function preencherFigurinhas(figurinhas, useAPI) {
     // Cria um Map de id → figurinha para lookup rápido
     const porId = new Map(figurinhas.map(f => [f.id, f]));
 
-    // Percorre todos os slots do HTML
+    // Percorre todos os slots do HTML (incluindo os gerados dinamicamente)
     const slots = document.querySelectorAll(".sticker-slot");
 
     for (const slot of slots) {
@@ -82,13 +42,13 @@ async function preencherFigurinhas() {
 
         const img = document.createElement("img");
         img.src = srcFinal;
-        img.alt = figurinha.nome;
+        img.alt = figurinha.nome || `Figurinha #${figurinha.id}`;
         img.className = "sticker-img";
         img.loading = "lazy";
         img.decoding = "async";
 
         img.onload = () => slot.classList.add("slot-preenchido");
-        img.onerror = () => console.warn(`Imagem não encontrada para: ${figurinha.nome} (caminho: ${img.src})`);
+        img.onerror = () => console.warn(`Imagem não encontrada para ID ${figurinha.id} (caminho: ${img.src})`);
 
         wrap.appendChild(bg);
         wrap.appendChild(img);
@@ -96,7 +56,91 @@ async function preencherFigurinhas() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// ===================================================
+// FUNÇÃO: Cria páginas dinâmicas para novas figurinhas
+// ===================================================
+function criarPaginasNovas(novasFigurinhas) {
+    const bookElement = document.getElementById("book");
+    const contracapa = bookElement.querySelector(".page-cover-back");
+    if (!contracapa) return;
+
+    const SLOTS_POR_PAGINA = 4;
+    const totalNovas = novasFigurinhas.length;
+    const totalPaginas = Math.ceil(totalNovas / SLOTS_POR_PAGINA);
+
+    // O último número de página estática em index.html é 6
+    let numeroPaginaCorrente = 7;
+
+    for (let p = 0; p < totalPaginas; p++) {
+        const classLeftRight = (numeroPaginaCorrente % 2 !== 0) ? "page-left" : "page-right";
+
+        // Cria a div da página
+        const pageDiv = document.createElement("div");
+        pageDiv.className = `page ${classLeftRight}`;
+
+        // Cria a div do conteúdo da página
+        const pageContent = document.createElement("div");
+        pageContent.className = "page-content";
+
+        // Header da página
+        const pageHeader = document.createElement("div");
+        pageHeader.className = "page-header";
+
+        const badge = document.createElement("span");
+        badge.className = "tech-badge badge-novas";
+        badge.textContent = "EXTRAS";
+
+        const title = document.createElement("h3");
+        title.className = "page-title";
+        title.textContent = `Novas Memórias (Vol. ${p + 1})`;
+
+        pageHeader.appendChild(badge);
+        pageHeader.appendChild(title);
+
+        // Grid de figurinhas (2x2 para 4 slots)
+        const grid = document.createElement("div");
+        grid.className = "stickers-grid";
+
+        // Limita a quantidade de slots nesta página
+        const inicio = p * SLOTS_POR_PAGINA;
+        const fim = Math.min(inicio + SLOTS_POR_PAGINA, totalNovas);
+
+        for (let i = inicio; i < fim; i++) {
+            const figurinha = novasFigurinhas[i];
+
+            const slot = document.createElement("div");
+            slot.className = "sticker-slot";
+
+            const num = document.createElement("div");
+            num.className = "slot-number";
+            num.textContent = `#${figurinha.id}`;
+
+            slot.appendChild(num);
+            grid.appendChild(slot);
+        }
+
+        // Footer da página
+        const pageFooter = document.createElement("div");
+        pageFooter.className = "page-footer";
+
+        const footerSpan = document.createElement("span");
+        footerSpan.textContent = `Pág. ${numeroPaginaCorrente}`;
+        pageFooter.appendChild(footerSpan);
+
+        // Monta a estrutura da página
+        pageContent.appendChild(pageHeader);
+        pageContent.appendChild(grid);
+        pageContent.appendChild(pageFooter);
+        pageDiv.appendChild(pageContent);
+
+        // Insere a nova página antes da contracapa
+        bookElement.insertBefore(pageDiv, contracapa);
+
+        numeroPaginaCorrente++;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
     const bookElement = document.getElementById("book");
     const btnPrev = document.getElementById("btn-prev");
     const btnNext = document.getElementById("btn-next");
@@ -107,7 +151,49 @@ document.addEventListener("DOMContentLoaded", () => {
     let isMuted = false;
     let pageFlip = null;
 
-    // 1. Initialize St.PageFlip
+    // 1. Carrega as figurinhas da API ou Fallback local
+    let figurinhas = [];
+    let useAPI = true;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/figurinhas`);
+        if (!response.ok) {
+            throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+        }
+        figurinhas = await response.json();
+        console.log(`✅ ${figurinhas.length} figurinhas carregadas da API!`);
+    } catch (erro) {
+        console.warn("⚠️ Não foi possível conectar à API do backend:", erro.message);
+        console.info("ℹ️ Carregando figurinhas locais a partir da pasta 'imgs/' como fallback.");
+        useAPI = false;
+
+        figurinhas = [
+            { id: 1, nome: "Joaquim", imagem_url: "imgs/01-pai.jpg" },
+            { id: 2, nome: "Neli", imagem_url: "imgs/02-mae.jpg" },
+            { id: 3, nome: "Erdinilza", imagem_url: "imgs/03-erdinilza.jpg" },
+            { id: 4, nome: "Arnaldo", imagem_url: "imgs/04-arnaldo.jpg" },
+            { id: 5, nome: "Gernilson", imagem_url: "imgs/05-gernilson.jpg" },
+            { id: 6, nome: "Sirlene", imagem_url: "imgs/06-sirlene.jpg" },
+            { id: 7, nome: "Gildeon", imagem_url: "imgs/07-gildeon.jpg" },
+            { id: 8, nome: "Gildei", imagem_url: "imgs/08-gildei.jpg" },
+            { id: 9, nome: "Carlos", imagem_url: "imgs/09-carlos.jpeg" },
+            { id: 10, nome: "Danilia", imagem_url: "imgs/10-danilia.jpg" },
+            { id: 11, nome: "Poliana", imagem_url: "imgs/11-poliana.jpg" },
+            { id: 12, nome: "Daniella", imagem_url: "imgs/12-daniella.jpg" },
+            { id: 13, nome: "Lucas", imagem_url: "imgs/13-lucas.jpg" },
+            { id: 14, nome: "Livia", imagem_url: "imgs/14-livia.jpg" },
+            { id: 15, nome: "Foto de Família", imagem_url: "imgs/15-familia.jpg" },
+            { id: 16, nome: "Momentos Marcantes", imagem_url: "imgs/16-momentos.jpg" }
+        ];
+    }
+
+    // 2. Cria as páginas dinâmicas para novas figurinhas
+    const novasFigurinhas = figurinhas.filter(f => f.id > 16);
+    if (novasFigurinhas.length > 0) {
+        criarPaginasNovas(novasFigurinhas);
+    }
+
+    // 3. Inicializa St.PageFlip
     try {
         pageFlip = new St.PageFlip(bookElement, {
             width: 550, // Base page width
@@ -127,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
             flippingTime: 800 // Transição mais ágil e snappier (800ms em vez de 1000ms)
         });
 
-        // Load pages from HTML
+        // Load pages from HTML (incluindo as páginas criadas dinamicamente)
         pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
         // Estado de arraste personalizado
@@ -240,9 +326,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show book after successful initialization
         bookElement.style.display = "block";
 
-        // Dia 3: Busca as figurinhas da API e preenche o álbum
-        // A função é async, chamamos sem await para não bloquear a inicialização do álbum
-        preencherFigurinhas();
+        // Preenche as figurinhas usando a lista previamente carregada/fallback
+        preencherFigurinhas(figurinhas, useAPI);
 
     } catch (error) {
         console.error("Erro ao inicializar a biblioteca PageFlip:", error);
