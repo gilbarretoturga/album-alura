@@ -101,6 +101,7 @@ body {
   justify-content: center;
   align-items: center;
   perspective: 1500px;
+  z-index: 1;
 }
 
 .flip-book {

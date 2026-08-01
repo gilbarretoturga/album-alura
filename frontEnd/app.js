@@ -223,26 +223,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         let startY = 0;
         let dragStarted = false;
 
-        // Monitora o mousedown/touchstart em cada página para iniciar a intenção de arraste
-        document.querySelectorAll(".page").forEach((page, index) => {
-            page.addEventListener("mousedown", (e) => {
-                if (e.target.closest("button") || e.target.closest("a")) return;
-                isClicking = true;
-                startX = e.clientX;
-                startY = e.clientY;
-                dragStarted = false;
-                activeDragPage = { page, index };
-            });
+        // Monitora o mousedown/touchstart no próprio contêiner do livro para iniciar a intenção de arraste
+        bookElement.addEventListener("mousedown", (e) => {
+            if (e.target.closest("button") || e.target.closest("a")) return;
+            isClicking = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            dragStarted = false;
+            activeDragPage = { index: pageFlip.getCurrentPageIndex() };
+        });
 
-            page.addEventListener("touchstart", (e) => {
-                if (e.target.closest("button") || e.target.closest("a")) return;
-                const touch = e.touches[0];
-                isClicking = true;
-                startX = touch.clientX;
-                startY = touch.clientY;
-                dragStarted = false;
-                activeDragPage = { page, index };
-            });
+        bookElement.addEventListener("touchstart", (e) => {
+            if (e.target.closest("button") || e.target.closest("a")) return;
+            const touch = e.touches[0];
+            isClicking = true;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            dragStarted = false;
+            activeDragPage = { index: pageFlip.getCurrentPageIndex() };
         });
 
         // Executa o movimento de dobra apenas se o mouse/dedo se mover além de um limiar (threshold)
