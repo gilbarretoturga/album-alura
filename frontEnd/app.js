@@ -269,10 +269,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 // Determina canto horizontal (direita vs esquerda) em coordenadas relativas ao livro
-                if (activeDragPage.index % 2 === 0) {
-                    cornerX = bookRect.width; // Canto direito
+                if (pageFlip && pageFlip.getOrientation() === "portrait") {
+                    if (deltaX < 0) {
+                        cornerX = bookRect.width; // Arrastando para a esquerda (próxima página)
+                    } else {
+                        cornerX = 0; // Arrastando para a direita (página anterior)
+                    }
                 } else {
-                    cornerX = 0; // Canto esquerdo
+                    // Modo paisagem (duas páginas)
+                    if (activeDragPage.index % 2 === 0) {
+                        cornerX = bookRect.width; // Canto direito
+                    } else {
+                        cornerX = 0; // Canto esquerdo
+                    }
                 }
 
                 document.body.classList.add("dragging");
@@ -304,11 +313,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         window.addEventListener("touchmove", (e) => {
+            if (isClicking && activeDragPage) {
+                // Impede o scroll nativo do navegador para não quebrar o arrastar
+                if (e.cancelable) {
+                    e.preventDefault();
+                }
+            }
             if (e.touches.length > 0) {
                 const touch = e.touches[0];
                 handleMove(touch.clientX, touch.clientY, true);
             }
-        });
+        }, { passive: false });
 
         window.addEventListener("mouseup", (e) => {
             handleRelease(e.clientX, e.clientY, false);
