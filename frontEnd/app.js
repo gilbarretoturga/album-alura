@@ -68,8 +68,8 @@ function criarPaginasNovas(novasFigurinhas) {
     const totalNovas = novasFigurinhas.length;
     const totalPaginas = Math.ceil(totalNovas / SLOTS_POR_PAGINA);
 
-    // O último número de página estática em index.html é 6
-    let numeroPaginaCorrente = 7;
+    // O último número de página estática em index.html é 12
+    let numeroPaginaCorrente = 13;
 
     for (let p = 0; p < totalPaginas; p++) {
         const classLeftRight = (numeroPaginaCorrente % 2 !== 0) ? "page-left" : "page-right";
@@ -183,12 +183,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             { id: 13, nome: "Lucas", imagem_url: "imgs/13-lucas.jpg" },
             { id: 14, nome: "Livia", imagem_url: "imgs/14-livia.jpg" },
             { id: 15, nome: "Foto de Família", imagem_url: "imgs/15-familia.jpg" },
-            { id: 16, nome: "Momentos Marcantes", imagem_url: "imgs/16-momentos.jpg" }
+            { id: 16, nome: "Momentos Marcantes", imagem_url: "imgs/16-momentos.jpg" },
+            { id: 17, nome: "Geladeira #17", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha.jpeg" },
+            { id: 18, nome: "Geladeira #18", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha2.jpeg" },
+            { id: 19, nome: "Geladeira #19", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha3.jpeg" },
+            { id: 20, nome: "Geladeira #20", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha4.jpeg" },
+            { id: 21, nome: "Geladeira #21", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha5.jpeg" },
+            { id: 22, nome: "Geladeira #22", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha6.jpeg" },
+            { id: 23, nome: "Geladeira #23", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha7.jpeg" },
+            { id: 24, nome: "Geladeira #24", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha8.jpeg" },
+            { id: 25, nome: "Geladeira #25", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha9.jpeg" },
+            { id: 26, nome: "Geladeira #26", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha10.jpeg" },
+            { id: 27, nome: "Geladeira #27", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha11.jpeg" },
+            { id: 28, nome: "Geladeira #28", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha12.jpeg" },
+            { id: 29, nome: "Geladeira #29", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha13.jpeg" },
+            { id: 30, nome: "Geladeira #30", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha14.jpeg" },
+            { id: 31, nome: "Geladeira #31", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha15.jpeg" },
+            { id: 32, nome: "Geladeira #32", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha16.jpeg" },
+            { id: 33, nome: "Geladeira #33", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha17.jpeg" },
+            { id: 34, nome: "Geladeira #34", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha18.jpeg" },
+            { id: 35, nome: "Geladeira #35", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha19.jpeg" },
+            { id: 36, nome: "Geladeira #36", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha20.jpeg" },
+            { id: 37, nome: "Geladeira #37", imagem_url: "../backEnd/figurinhas/Geladeira da vergonha21.jpeg" }
         ];
     }
 
-    // 2. Cria as páginas dinâmicas para novas figurinhas
-    const novasFigurinhas = figurinhas.filter(f => f.id > 16);
+    // 2. Cria as páginas dinâmicas para novas figurinhas (IDs maiores que 37)
+    const novasFigurinhas = figurinhas.filter(f => f.id > 37);
     if (novasFigurinhas.length > 0) {
         criarPaginasNovas(novasFigurinhas);
     }
@@ -216,125 +237,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Load pages from HTML (incluindo as páginas criadas dinamicamente)
         pageFlip.loadFromHTML(document.querySelectorAll(".page"));
 
-        // Estado de arraste personalizado
-        let activeDragPage = null;
-        let isClicking = false;
-        let startX = 0;
-        let startY = 0;
-        let dragStarted = false;
-
-        // Monitora o mousedown/touchstart no próprio contêiner do livro para iniciar a intenção de arraste
-        bookElement.addEventListener("mousedown", (e) => {
-            if (e.target.closest("button") || e.target.closest("a")) return;
-            isClicking = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            dragStarted = false;
-            activeDragPage = { index: pageFlip.getCurrentPageIndex() };
-        });
-
-        bookElement.addEventListener("touchstart", (e) => {
-            if (e.target.closest("button") || e.target.closest("a")) return;
-            const touch = e.touches[0];
-            isClicking = true;
-            startX = touch.clientX;
-            startY = touch.clientY;
-            dragStarted = false;
-            activeDragPage = { index: pageFlip.getCurrentPageIndex() };
-        });
-
-        // Executa o movimento de dobra apenas se o mouse/dedo se mover além de um limiar (threshold)
-        const handleMove = (clientX, clientY, isTouch = false) => {
-            if (!isClicking || !activeDragPage) return;
-
-            const deltaX = clientX - startX;
-            const deltaY = clientY - startY;
-            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-            const bookRect = bookElement.getBoundingClientRect();
-
-            // Só ativa o flip se mover mais de 10px (evita disparar ao clicar e soltar estático)
-            if (distance > 10 && !dragStarted) {
-                dragStarted = true;
-                let cornerX, cornerY;
-
-                // Determina canto vertical (topo vs base) em coordenadas relativas ao livro
-                const centerY = bookRect.top + bookRect.height / 2;
-                if (startY < centerY) {
-                    cornerY = 0; // Canto superior
-                } else {
-                    cornerY = bookRect.height; // Canto inferior
-                }
-
-                // Determina canto horizontal (direita vs esquerda) em coordenadas relativas ao livro
-                if (pageFlip && pageFlip.getOrientation() === "portrait") {
-                    if (deltaX < 0) {
-                        cornerX = bookRect.width; // Arrastando para a esquerda (próxima página)
-                    } else {
-                        cornerX = 0; // Arrastando para a direita (página anterior)
-                    }
-                } else {
-                    // Modo paisagem (duas páginas)
-                    if (activeDragPage.index % 2 === 0) {
-                        cornerX = bookRect.width; // Canto direito
-                    } else {
-                        cornerX = 0; // Canto esquerdo
-                    }
-                }
-
-                document.body.classList.add("dragging");
-                pageFlip.startUserTouch({ x: cornerX, y: cornerY });
-            }
-
-            if (dragStarted) {
-                const relX = clientX - bookRect.left;
-                const relY = clientY - bookRect.top;
-                pageFlip.userMove({ x: relX, y: relY }, isTouch);
-            }
-        };
-
-        const handleRelease = (clientX, clientY, isTouch = false) => {
-            if (dragStarted) {
-                const bookRect = bookElement.getBoundingClientRect();
-                const relX = clientX - bookRect.left;
-                const relY = clientY - bookRect.top;
-                pageFlip.userStop({ x: relX, y: relY }, isTouch);
-            }
-            isClicking = false;
-            dragStarted = false;
-            activeDragPage = null;
-            document.body.classList.remove("dragging");
-        };
-
-        window.addEventListener("mousemove", (e) => {
-            handleMove(e.clientX, e.clientY, false);
-        });
-
-        window.addEventListener("touchmove", (e) => {
-            if (isClicking && activeDragPage) {
-                // Impede o scroll nativo do navegador para não quebrar o arrastar
-                if (e.cancelable) {
-                    e.preventDefault();
-                }
-            }
-            if (e.touches.length > 0) {
-                const touch = e.touches[0];
-                handleMove(touch.clientX, touch.clientY, true);
-            }
-        }, { passive: false });
-
-        window.addEventListener("mouseup", (e) => {
-            handleRelease(e.clientX, e.clientY, false);
-        });
-
-        window.addEventListener("touchend", (e) => {
-            const touch = e.changedTouches[0] || e.touches[0];
-            if (touch) {
-                handleRelease(touch.clientX, touch.clientY, true);
-            } else {
-                handleRelease(startX, startY, true);
-            }
-        });
+        // A navegação por arraste com o mouse/toque foi desativada a pedido do usuário.
+        // A navegação é feita exclusivamente pelas setas de navegação.
 
         // Show book after successful initialization
         bookElement.style.display = "block";

@@ -1159,3 +1159,66 @@ body.dragging * {
     height: 40px;
   }
 }
+
+/* ===================================================
+   ESTILOS TEMÁTICOS: GELADEIRA DA VERGONHA 2.0
+   Simula uma porta de geladeira de aço escovado
+   com adesivos/fotos imantadas levemente rotacionadas.
+   =================================================== */
+.page-geladeira {
+  background: linear-gradient(135deg, #e5e6e6 0%, #ffffff 50%, #d1d3d4 100%) !important;
+  border-left: 1px solid #bcbec0;
+  box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.page-geladeira.page-right {
+  border-right: 1px solid #bcbec0;
+  border-left: none;
+  box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Badge específica vermelha/retrô */
+.tech-badge.badge-geladeira {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+/* Grid específico para as figurinhas da geladeira */
+.grid-geladeira {
+  gap: 15px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Efeito de imã / polaroid rotacionada */
+.slot-geladeira {
+  background: #ffffff;
+  padding: 10px 10px 25px 10px !important; /* Espaço inferior simulando Polaroid */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e6e6e6 !important;
+  transform: rotate(var(--rotation, 0deg));
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+/* Hover: destaca a figurinha da geladeira trazendo-a para frente */
+.slot-geladeira:hover {
+  transform: rotate(0deg) scale(1.08) !important;
+  z-index: 10;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Detalhe de "Imã de Geladeira" no topo de cada slot */
+.slot-geladeira::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle at 30% 30%, #ff4d4d, #b30000);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 3;
+}
